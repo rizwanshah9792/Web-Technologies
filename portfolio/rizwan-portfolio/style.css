@@ -1,0 +1,320 @@
+/* Green Theme Portfolio CSS */
+
+:root {
+    --bg-dark: #0f172a;
+    --bg-section: #1a2e28;
+    --accent: #34d399;
+    --accent-dark: #059669;
+    --text-light: #f0fdf4;
+    --text-muted: #94a3b8;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    flex: 1;
+    line-height: 1.6;
+  }
+  
+  .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 2rem 0;
+  }
+  
+  header {
+    background: var(--bg-section);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+  }
+  
+  header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .logo {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1.2rem;
+  }
+  
+  nav a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.3s;
+  }
+  
+  nav a:hover {
+    color: var(--accent);
+  }
+  
+  .cta {
+    background: var(--accent);
+    color: var(--bg-dark);
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s;
+  }
+  
+  .cta:hover {
+    background: var(--accent-dark);
+  }
+  
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background: #10231e;
+  }
+  
+  .hero .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 2rem;
+    width: 100%;
+  }
+  
+  .hero-text {
+    flex: 1;
+  }
+  
+  .hero h2 {
+    font-size: 3rem;
+    color: var(--accent);
+  }
+  
+  .hero h3 {
+    font-size: 2rem;
+    margin: 1rem 0;
+  }
+  
+  .hero .btn {
+    background: var(--accent);
+    color: var(--bg-dark);
+    padding: 0.8rem 1.5rem;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: 0.3s ease;
+  }
+  
+  .hero .btn:hover {
+    background: var(--accent-dark);
+  }
+  
+  .hero-img {
+    flex: 1;
+    text-align: right;
+  }
+  
+  .hero-img img {
+    width: 300px;
+    border-radius: 50%;
+    border: 4px solid var(--accent);
+  }
+  
+  .stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .stats div {
+    text-align: center;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  .services,
+  .projects,
+  .about,
+  .newsletter {
+    background: var(--bg-section);
+    padding: 4rem 0;
+  }
+  
+  .service-list,
+  .project-list {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .service-item,
+  .project-item {
+    background: #102019;
+    padding: 2rem;
+    border-radius: 15px;
+    width: 300px;
+    text-align: center;
+    transition: transform 0.3s;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  }
+  
+  .service-item:hover,
+  .project-item:hover {
+    transform: translateY(-10px);
+  }
+  
+  .service-item i,
+  .project-item h3 {
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  
+  .project-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 250px;
+  }
+  
+  .github-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
+    color: var(--accent);
+    padding: 0.6rem 1.2rem;
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-top: auto;
+  }
+  
+  .github-btn:hover {
+    background: var(--accent);
+    color: var(--bg-dark);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 5px 15px rgba(52, 211, 153, 0.3);
+  }
+  
+  .about-content {
+    background: #102019;
+    padding: 2rem;
+    border-radius: 10px;
+  }
+  
+  .about-content ul {
+    margin-top: 1rem;
+    list-style-type: disc;
+    padding-left: 1.5rem;
+  }
+  
+  .contact {
+    padding: 4rem 0;
+    text-align: center;
+    background: var(--bg-card);
+  }
+  
+  .contact .email {
+    display: block;
+    margin: 1rem 0;
+    color: var(--accent);
+    font-size: 1.2rem;
+    text-decoration: none;
+  }
+  
+  .social-links a {
+    margin: 0 1rem;
+    font-size: 1.5rem;
+    color: var(--text-light);
+    transition: color 0.3s;
+  }
+  
+  .social-links a:hover {
+    color: var(--accent);
+  }
+  
+  footer {
+    text-align: center;
+    background: #122e27;
+    padding: 1.5rem 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+  
+  @media (max-width: 768px) {
+    .hero {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    nav ul {
+      flex-direction: column;
+      background: var(--bg-dark);
+      padding: 1rem;
+      border-radius: 8px;
+    }
+  
+    .service-list,
+    .project-list {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+  
+  .newsletter-form {
+    margin-top: 1rem;
+  }
+  
+  .newsletter-form input[type="email"] {
+    padding: 0.8rem;
+    width: 300px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 1rem;
+  }
+  
+  .newsletter-form button {
+    background: var(--accent);
+    color: var(--bg-dark);
+    padding: 0.8rem 1.2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .newsletter-form button:hover {
+    background: var(--accent-dark);
+  }

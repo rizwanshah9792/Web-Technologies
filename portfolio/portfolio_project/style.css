@@ -1,0 +1,280 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+/* Base font sizing */
+html {
+    font-size: 18px;
+  }
+  
+  /* Body font and color */
+  body {
+    font-family: 'Merriweather', serif;
+    color: #40514E;
+    margin: 0;
+    text-align: center;
+  }
+  
+  /* Top header retains its bg and original fonts */
+  .top-container {
+    background-color: #E4F9F5;
+    position: relative;
+    padding: 80px 20px;
+  }
+  h1 {
+    font-family: 'Sacramento', cursive;
+    color: #66BFBF;
+    font-size: 4rem;
+    margin: 2rem auto;
+  }
+  
+  /* Section wrapper: centered, taller but not full-width */
+  .section {
+    width: 100%;             /* Full width */
+    padding: 100px 40px;     /* Space around content */
+    min-height: 500px;       /* Optional: controls height */
+    box-sizing: border-box;
+  }
+
+
+  .content-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  
+  /* Headings */
+  h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 1000px;
+    font-size: 2.5rem;
+    margin-bottom: 5rem;
+  }
+  h3 {
+    font-family: 'Montserrat', sans-serif;
+    color: #11999E;
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  /* Text */
+   p, li {
+    font-family: "Roboto Mono", monospace;
+    font-optical-sizing: auto;
+    font-weight: 400; /* Replace with a valid value */
+    font-style: normal;
+    font-size: 1.3rem;
+    line-height: 1.6;
+  }
+  
+  .white-bg {
+    background-color: #ffffff;
+  }
+  
+  .achievements-section ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 20px;
+  }
+  
+  .achievements-section li {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
+  
+  
+  /* Backgrounds */
+  .services-section,
+  .about-section,
+  .education-section,
+  .contact-section {
+    background-color: #ffffff;
+  }
+  /* Others keep alternate pastel */
+  .middle-container .section:nth-of-type(odd):not(.services-section):not(.about-section):not(.education-section):not(.contact-section) {
+    background-color: #E4F9F5;
+  }
+  .middle-container .section:nth-of-type(even):not(.services-section):not(.about-section):not(.education-section):not(.contact-section) {
+    background-color: #F0F0F0;
+  }
+  
+  /* Lists: no bullets */
+  section ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  
+  /* Hobbies inline */
+  .hobbies-list li {
+    display: inline-block;
+    margin: 0 10px;
+  }
+  
+  /* Profile image */
+  .profile-img {
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #66BFBF;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    margin-bottom: 1rem;
+  }
+  
+  /* Grid layouts */
+  .services-grid,
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin: auto;
+    text-align: left;
+  }
+  
+  /* Cards */
+  .service-card,
+  .project-card {
+    background: #fff;
+    border-radius: 1rem;
+    padding: 2.5rem;
+    box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    transition: transform 0.4s, box-shadow 0.4s;
+  }
+  .service-card:hover,
+  .project-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 24px 48px rgba(0,0,0,0.25);
+  }
+  
+  /* Buttons */
+  .btn {
+    display: inline-block;
+    background: #11cdd4;
+    background-image: linear-gradient(to bottom, #11cdd4, #11999e);
+    border-radius: 8px;
+    font-family: 'Montserrat', sans-serif;
+    color: #fff;
+    font-size: 1.1rem;
+    padding: 12px 24px;
+    text-decoration: none;
+    margin-top: 12px;
+  }
+  .btn:hover {
+    background-image: linear-gradient(to bottom, #30e3cb, #2bc4ad);
+  }
+  
+  /* Social icons */
+  .social-links a {
+    color: #11999E;
+    margin: 0 12px;
+    font-size: 2rem;
+    text-decoration: none;
+  }
+  .social-links a:hover {
+    color: #40514E;
+  }
+  
+  /* Footer */
+  .bottom-container {
+    background-color: #66BFBF;
+    padding: 50px 0;
+  }
+  .bottom-container p {
+    color: #EAF6F6;
+    font-size: 1rem;
+  }
+  
+  /* --------------------- RESPONSIVE DESIGN --------------------- */
+
+/* --------------------- RESPONSIVE DESIGN --------------------- */
+
+/* Tablets (max-width: 768px) */
+@media (max-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+
+  .profile-img {
+    width: 180px;
+    height: 180px;
+  }
+
+  .services-grid,
+  .projects-grid {
+    grid-template-columns: 1fr; /* Stack vertically */
+  }
+
+  .section {
+    padding: 80px 20px;
+  }
+
+  h1 {
+    font-size: 3.2rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  p,
+  li {
+    font-size: 1.1rem;
+  }
+
+  .btn {
+    font-size: 1rem;
+    padding: 10px 20px;
+  }
+
+  .social-links a {
+    font-size: 1.8rem;
+  }
+}
+
+/* Phones (max-width: 480px) */
+@media (max-width: 480px) {
+  html {
+    font-size: 15px;
+  }
+
+  .top-container {
+    padding: 40px 10px;
+  }
+
+  h1 {
+    font-size: 2.8rem;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+  }
+
+  .section {
+    padding: 60px 15px;
+  }
+
+  .profile-img {
+    width: 150px;
+    height: 150px;
+  }
+
+  .services-grid,
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .btn {
+    font-size: 0.95rem;
+    padding: 10px 16px;
+  }
+
+  .social-links a {
+    font-size: 1.5rem;
+    margin: 0 6px;
+  }
+
+  .hobbies-list li {
+    display: block;
+    margin: 10px 0;
+  }
+}
