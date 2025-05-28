@@ -1,8 +1,11 @@
 # PHP MySQL Application Suite
 
-![PHP](https://img.shields.io/badge/PHP-7.4+-blue.svg)
-![MySQL](https://img.shields.io/badge/MySQL-5.7+-orange.svg)
-![License](https://img.shields.io/badge/License-MIT-green.svg)
+![TypeScript](https://img.shields.io/badge/TypeScript-57.7%25-blue?logo=typescript)
+![HTML](https://img.shields.io/badge/HTML-23.6%25-orange?logo=html5)
+![PHP](https://img.shields.io/badge/PHP-12.2%25-777bb4?logo=php)
+![CSS](https://img.shields.io/badge/CSS-6.1%25-563d7c?logo=css3)
+![JavaScript](https://img.shields.io/badge/JavaScript-0.4%25-f7df1e?logo=javascript)
+
 
 A collection of PHP applications demonstrating MySQL database interactions, user authentication, and API development. This repository includes six tasks, with **Task 2** fully implemented for inserting data into a MySQL database.
 
