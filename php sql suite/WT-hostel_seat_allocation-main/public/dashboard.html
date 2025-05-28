@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            background-color: #f4f7fa;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #007bff;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding-top: 20px;
+        }
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+        .sidebar a {
+            padding: 15px 20px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            border-left: 4px solid transparent;
+            transition: background-color 0.3s, border-left 0.3s;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #0056b3;
+            border-left: 4px solid #ffc107;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 20px 40px;
+            overflow-y: auto;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        h2.section-title {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        /* Table styling for sections */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f9ff;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        /* Profile styling */
+        .profile-info ul {
+            list-style: none;
+            padding: 0;
+            max-width: 400px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .profile-info li {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        @media (max-width: 700px) {
+            .content { padding: 10px; }
+            .sidebar { width: 100px; }
+            .sidebar h2 { font-size: 16px; }
+            .sidebar a { font-size: 13px; padding: 10px 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Student Dashboard</h2>
+        <a href="#" class="active" data-section="profile">Profile</a>
+        <a href="#" data-section="rooms">Available Rooms</a>
+        <a href="#" data-section="bookings">Your Bookings</a>
+        <a href="#" data-section="payments">Payments</a>
+        <a href="#" id="logoutBtn">Logout</a>
+    </div>
+    <div class="content">
+        <section id="profile" class="section active">
+            <h2 class="section-title">Profile</h2>
+            <div class="profile-info" id="profileInfo">
+                <!-- Profile details will be loaded here -->
+            </div>
+        </section>
+        <section id="rooms" class="section">
+            <h2 class="section-title">Available Rooms</h2>
+            <div id="roomList">
+                <!-- Rooms table will be loaded here -->
+            </div>
+        </section>
+        <section id="bookings" class="section">
+            <h2 class="section-title">Your Bookings</h2>
+            <div id="bookingList">
+                <!-- Bookings table will be loaded here -->
+            </div>
+        </section>
+        <section id="payments" class="section">
+            <h2 class="section-title">Payments</h2>
+            <div id="paymentList">
+                <!-- Payments info will be loaded here -->
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Sidebar navigation logic
+        const links = document.querySelectorAll('.sidebar a[data-section]');
+        const sections = document.querySelectorAll('.section');
+
+        links.forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                // Remove active class from all links
+                links.forEach(l => l.classList.remove('active'));
+                // Hide all sections
+                sections.forEach(s => s.classList.remove('active'));
+                // Add active class to clicked link
+                link.classList.add('active');
+                // Show corresponding section
+                const sectionId = link.getAttribute('data-section');
+                document.getElementById(sectionId).classList.add('active');
+            });
+        });
+
+        // Logout button
+        document.getElementById('logoutBtn').addEventListener('click', e => {
+            e.preventDefault();
+            localStorage.removeItem('student_id');
+            window.location.href = 'login.html';
+        });
+
+        // Load student_id
+        const student_id = localStorage.getItem('student_id');
+        if (!student_id) {
+            window.location.href = 'login.html';
+        }
+
+        // Load profile
+        function loadProfile() {
+            fetch('../api/students/profile.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({student_id})
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const s = data.student;
+                    const profileDiv = document.getElementById('profileInfo');
+                    profileDiv.innerHTML = `
+                        <ul>
+                            <li><b>Name:</b> ${s.first_name} ${s.last_name}</li>
+                            <li><b>Email:</b> ${s.email}</li>
+                            <li><b>Registration No:</b> ${s.reg_no}</li>
+                            <li><b>Gender:</b> ${s.gender || '-'}</li>
+                            <li><b>Date of Birth:</b> ${s.dob || '-'}</li>
+                            <li><b>Phone:</b> ${s.phone || '-'}</li>
+                            <li><b>Address:</b> ${s.address || '-'}</li>
+                        </ul>
+                    `;
+                } else {
+                    document.getElementById('profileInfo').textContent = data.message;
+                }
+            });
+        }
+
+        // Load available rooms
+        function loadRooms() {
+            fetch('../api/rooms/list.php')
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const rooms = data.rooms;
+                    if (rooms.length === 0) {
+                        document.getElementById('roomList').innerHTML = '<p>No rooms available.</p>';
+                        return;
+                    }
+                    let html = '<table><tr><th>Hostel</th><th>Room No</th><th>Type</th><th>Seats</th><th>Price</th><th>Action</th></tr>';
+                    rooms.forEach(room => {
+                        html += `<tr>
+                            <td>${room.hostel_name}</td>
+                            <td>${room.room_number}</td>
+                            <td>${room.room_type}</td>
+                            <td>${room.available_seats}/${room.capacity}</td>
+                            <td>₹${room.price}</td>
+                            <td><button onclick="bookRoom(${room.room_id})" ${room.available_seats < 1 ? 'disabled' : ''}>Book</button></td>
+                        </tr>`;
+                    });
+                    html += '</table>';
+                    document.getElementById('roomList').innerHTML = html;
+                } else {
+                    document.getElementById('roomList').textContent = 'Could not fetch rooms.';
+                }
+            });
+        }
+
+        // Book room function
+        function bookRoom(room_id) {
+            const check_in = prompt('Enter check-in date (YYYY-MM-DD):');
+            const check_out = prompt('Enter check-out date (YYYY-MM-DD):');
+            if (!check_in || !check_out) {
+                alert('Booking cancelled.');
+                return;
+            }
+            fetch('../api/bookings/book.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({student_id, room_id, check_in, check_out})
+            })
+            .then(res => res.json())
+            .then(result => {
+                alert(result.message);
+                loadRooms();
+                loadBookings();
+            });
+        }
+
+        // Load bookings
+        function loadBookings() {
+            fetch('../api/bookings/list.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({student_id})
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const bookings = data.bookings;
+                    if (bookings.length === 0) {
+                        document.getElementById('bookingList').innerHTML = '<p>No bookings yet.</p>';
+                        return;
+                    }
+                    let html = '<table><tr><th>Hostel</th><th>Room No</th><th>Type</th><th>Check-in</th><th>Check-out</th><th>Status</th></tr>';
+                    bookings.forEach(b => {
+                        html += `<tr>
+                            <td>${b.hostel_name}</td>
+                            <td>${b.room_number}</td>
+                            <td>${b.room_type}</td>
+                            <td>${b.check_in}</td>
+                            <td>${b.check_out}</td>
+                            <td>${b.status}</td>
+                        </tr>`;
+                    });
+                    html += '</table>';
+                    document.getElementById('bookingList').innerHTML = html;
+                } else {
+                    document.getElementById('bookingList').textContent = 'Could not fetch bookings.';
+                }
+            });
+        }
+
+        // Load payments
+        function loadPayments() {
+            fetch('../api/payments/list.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({student_id})
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const payments = data.payments;
+                    if (payments.length === 0) {
+                        document.getElementById('paymentList').innerHTML = '<p>No payments made yet.</p>';
+                        return;
+                    }
+                    let html = '<table><tr><th>Payment ID</th><th>Booking ID</th><th>Amount</th><th>Mode</th><th>Status</th><th>Date</th></tr>';
+                    payments.forEach(p => {
+                        html += `<tr>
+                            <td>${p.payment_id}</td>
+                            <td>${p.booking_id}</td>
+                            <td>₹${p.amount}</td>
+                            <td>${p.payment_mode}</td>
+                            <td>${p.status}</td>
+                            <td>${p.payment_date}</td>
+                        </tr>`;
+                    });
+                    html += '</table>';
+                    document.getElementById('paymentList').innerHTML = html;
+                } else {
+                    document.getElementById('paymentList').textContent = 'Could not fetch payments.';
+                }
+            });
+        }
+
+        // Initial load
+        loadProfile();
+        loadRooms();
+        loadBookings();
+        loadPayments();
+    </script>
+</body>
+</html>

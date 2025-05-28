@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Manage Students</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        body {
+            background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin: 24px 0 0 24px;
+        }
+        a:hover { text-decoration: underline; }
+        h2 {
+            color: #007bff;
+            margin-top: 24px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        .add-btn {
+            display: block;
+            margin: 32px auto 0 auto;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            padding: 12px 36px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.09);
+            transition: background 0.2s;
+        }
+        .add-btn:hover {
+            background: #0056b3;
+        }
+        #addStudentModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            border: 2px solid #007bff;
+            padding: 28px 32px 18px 32px;
+            z-index: 1000;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            min-width: 320px;
+            border-radius: 14px;
+            max-width: 95vw;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        #addStudentModal h3 {
+            color: #007bff;
+            margin-top: 0;
+            margin-bottom: 18px;
+            letter-spacing: 0.5px;
+        }
+        #addStudentModal label {
+            display: block;
+            margin-bottom: 14px;
+            color: #222;
+            font-weight: 500;
+        }
+        #addStudentModal input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1.5px solid #b6d4fe;
+            border-radius: 6px;
+            font-size: 15px;
+            margin-top: 4px;
+            margin-bottom: 8px;
+            outline: none;
+            transition: border 0.2s;
+        }
+        #addStudentModal input:focus {
+            border: 1.5px solid #007bff;
+        }
+        #addStudentModal button[type="submit"] {
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 9px 28px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.2s;
+        }
+        #addStudentModal button[type="submit"]:hover {
+            background: #0056b3;
+        }
+        #addStudentModal button[type="button"] {
+            background: #bbb;
+            color: #fff;
+            margin-left: 10px;
+            border-radius: 6px;
+            padding: 9px 18px;
+        }
+        #addStudentModal button[type="button"]:hover {
+            background: #888;
+        }
+        #modalOverlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.2);
+            z-index: 999;
+        }
+        #message {
+            margin: 8px auto 0 auto;
+            font-size: 15px;
+            min-height: 22px;
+            max-width: 480px;
+            text-align: center;
+        }
+        #studentList {
+            margin: 0 auto;
+            max-width: 1100px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        th, td {
+            border: none;
+            padding: 14px 12px;
+            text-align: left;
+        }
+        th {
+            background: #007bff;
+            color: #fff;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        tr:nth-child(even) {
+            background: #f3f7fb;
+        }
+        tr:hover {
+            background: #e6f0fa;
+        }
+        button.delete-btn {
+            background: #e53935;
+            color: #fff;
+            border: none;
+            padding: 7px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        button.delete-btn:hover {
+            background: #b71c1c;
+        }
+        @media (max-width: 800px) {
+            #studentList { max-width: 98vw; }
+            table, th, td { font-size: 14px; }
+            #addStudentModal { padding: 18px 5vw; }
+        }
+        body.modal-open {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <a href="dashboard.html">← Back to Admin Dashboard</a>
+    <h2>Manage Students</h2>
+    <button class="add-btn" id="openAddStudentBtn">+ Add Student</button>
+    <div id="message"></div>
+    <h3 style="color:#007bff; margin:36px 0 16px 0; text-align:center;">All Students</h3>
+    <div id="studentList"></div>
+
+    <!-- Modal overlay and Add Student Modal -->
+    <div id="modalOverlay"></div>
+    <div id="addStudentModal">
+        <h3>Add Student</h3>
+        <form id="addStudentForm">
+            <label>First Name: <input type="text" id="first_name" required></label>
+            <label>Last Name: <input type="text" id="last_name" required></label>
+            <label>Email: <input type="email" id="email" required></label>
+            <label>Reg. No: <input type="text" id="reg_no" required></label>
+            <label>Gender: <input type="text" id="gender"></label>
+            <label>DOB: <input type="date" id="dob"></label>
+            <label>Phone: <input type="text" id="phone"></label>
+            <button type="submit">Add Student</button>
+            <button type="button" onclick="closeAddModal()">Cancel</button>
+        </form>
+    </div>
+
+    <script>
+    // Modal logic for Add Student
+    const addStudentModal = document.getElementById('addStudentModal');
+    const modalOverlay = document.getElementById('modalOverlay');
+    function openAddModal() {
+        document.body.classList.add('modal-open');
+        addStudentModal.style.display = 'block';
+        modalOverlay.style.display = 'block';
+        document.getElementById('message').textContent = '';
+    }
+    function closeAddModal() {
+        document.body.classList.remove('modal-open');
+        addStudentModal.style.display = 'none';
+        modalOverlay.style.display = 'none';
+        document.getElementById('addStudentForm').reset();
+    }
+    document.getElementById('openAddStudentBtn').onclick = openAddModal;
+    modalOverlay.onclick = closeAddModal;
+
+    // Add student
+    document.getElementById('addStudentForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const data = {
+            first_name: document.getElementById('first_name').value,
+            last_name: document.getElementById('last_name').value,
+            email: document.getElementById('email').value,
+            reg_no: document.getElementById('reg_no').value,
+            gender: document.getElementById('gender').value,
+            dob: document.getElementById('dob').value,
+            phone: document.getElementById('phone').value
+        };
+        const response = await fetch('../../api/students/add.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        document.getElementById('message').textContent = result.message;
+        if(result.status === 'success') {
+            setTimeout(() => {
+                closeAddModal();
+                loadStudents();
+            }, 1000);
+        }
+    });
+
+    // Load students
+    function loadStudents() {
+        fetch('../../api/students/list.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                let html = '<table><tr><th>ID</th><th>Name</th><th>Email</th><th>Reg. No</th><th>Gender</th><th>DOB</th><th>Phone</th><th>Action</th></tr>';
+                data.students.forEach(s => {
+                    html += `<tr>
+                        <td>${s.student_id}</td>
+                        <td>${s.first_name} ${s.last_name}</td>
+                        <td>${s.email}</td>
+                        <td>${s.reg_no}</td>
+                        <td>${s.gender || '-'}</td>
+                        <td>${s.dob || '-'}</td>
+                        <td>${s.phone || '-'}</td>
+                        <td><button class="delete-btn" onclick="deleteStudent(${s.student_id})">Delete</button></td>
+                    </tr>`;
+                });
+                html += '</table>';
+                document.getElementById('studentList').innerHTML = html;
+            } else {
+                document.getElementById('studentList').textContent = 'Could not fetch students.';
+            }
+        });
+    }
+    loadStudents();
+
+    // Delete student
+    window.deleteStudent = function(student_id) {
+        if (!confirm('Are you sure you want to delete this student?')) return;
+        fetch('../../api/students/delete.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({student_id})
+        })
+        .then(response => response.json())
+        .then(result => {
+            alert(result.message);
+            loadStudents();
+        })
+        .catch(err => {
+            alert('Error deleting student: ' + err);
+            console.error(err);
+        });
+    }
+    </script>
+</body>
+</html>

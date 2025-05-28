@@ -1,0 +1,10 @@
+{
+  "name": "yourname/hostel-seat-allocation",
+  "description": "A PHP hostel seat allocation system",
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  }
+}

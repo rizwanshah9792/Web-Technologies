@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Login</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            background: linear-gradient(120deg, #007bff 0%, #4fc3f7 100%);
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-card {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+            padding: 38px 36px 28px 36px;
+            max-width: 350px;
+            width: 100%;
+            text-align: center;
+            animation: fadein 0.7s;
+        }
+        .login-card h2 {
+            color: #007bff;
+            margin-bottom: 28px;
+            letter-spacing: 1px;
+            font-size: 2rem;
+        }
+        .login-card h2 a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .login-card h2 a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+        .login-card label {
+            display: block;
+            text-align: left;
+            margin: 12px 0 6px 0;
+            font-weight: 500;
+            color: #333;
+        }
+        .login-card input[type="email"],
+        .login-card input[type="text"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #b6d4fe;
+            border-radius: 6px;
+            font-size: 15px;
+            margin-bottom: 10px;
+            outline: none;
+            transition: border 0.2s;
+        }
+        .login-card input:focus {
+            border: 1.5px solid #007bff;
+        }
+        .login-card button {
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 32px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+            letter-spacing: 0.5px;
+        }
+        .login-card button:hover {
+            background: #0056b3;
+        }
+        .signup-btn {
+            background: #fff;
+            color: #007bff;
+            border: 2px solid #007bff;
+            margin-top: 20px;
+            font-weight: 600;
+            transition: background 0.2s, color 0.2s;
+        }
+        .signup-btn:hover {
+            background: #007bff;
+            color: #fff;
+        }
+        #message {
+            margin-top: 18px;
+            font-size: 15px;
+        }
+        @keyframes fadein {
+            from { opacity: 0; transform: translateY(30px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        @media (max-width: 500px) {
+            .login-card { padding: 18px 8vw; }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h2>
+            <a href="admin/login.html" title="Go to Admin Login">Student Login</a>
+        </h2>
+        <form id="loginForm">
+            <label for="email">Email:</label>
+            <input type="email" id="email" required autocomplete="username">
+            <label for="reg_no">Registration Number:</label>
+            <input type="text" id="reg_no" required autocomplete="off">
+            <button type="submit">Login</button>
+        </form>
+        <div id="message"></div>
+        <button class="signup-btn" onclick="window.location.href='register.html'">Sign Up</button>
+    </div>
+    <script>
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const formData = {
+            email: document.getElementById('email').value,
+            reg_no: document.getElementById('reg_no').value
+        };
+        const response = await fetch('api/students/login.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(formData)
+        });
+        const result = await response.json();
+        const msgDiv = document.getElementById('message');
+        if(result.status === 'success') {
+            localStorage.setItem('student_id', result.student_id);
+            window.location.href = "dashboard.html";
+        } else {
+            msgDiv.style.color = 'red';
+            msgDiv.textContent = result.message;
+        }
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Make Payment</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <a href="dashboard.html">← Back to Dashboard</a>
+    <h2>Make Payment</h2>
+    <form id="paymentForm">
+        <label>Booking:
+            <select id="booking_id" required></select>
+        </label><br>
+        <label>Amount: <input type="number" id="amount" required></label><br>
+        <label>Payment Mode:
+            <select id="payment_mode" required>
+                <option value="cash">Cash</option>
+                <option value="card">Card</option>
+                <option value="online">Online</option>
+            </select>
+        </label><br>
+        <button type="submit">Pay</button>
+    </form>
+    <div id="message"></div>
+    <h3>Your Payments</h3>
+    <div id="paymentList"></div>
+    <script>
+    const student_id = localStorage.getItem('student_id');
+    if (!student_id) window.location.href = "login.html";
+
+    // Populate bookings dropdown
+    function loadBookings() {
+        fetch('../api/bookings/list.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({student_id})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const select = document.getElementById('booking_id');
+                select.innerHTML = '';
+                data.bookings.forEach(b => {
+                    // Only show unpaid bookings
+                    if (b.status !== 'paid') {
+                        const option = document.createElement('option');
+                        option.value = b.booking_id;
+                        option.textContent = `Booking #${b.booking_id} (Room ${b.room_number}, ${b.check_in} to ${b.check_out})`;
+                        select.appendChild(option);
+                    }
+                });
+            }
+        });
+    }
+    loadBookings();
+
+    // Payment form submission
+    document.getElementById('paymentForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const data = {
+            booking_id: document.getElementById('booking_id').value,
+            amount: document.getElementById('amount').value,
+            payment_mode: document.getElementById('payment_mode').value
+        };
+        const response = await fetch('../api/payments/pay.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        document.getElementById('message').textContent = result.message;
+        if (result.status === 'success') {
+            document.getElementById('paymentForm').reset();
+            loadPayments();
+            loadBookings();
+        }
+    });
+
+    // List all payments
+    function loadPayments() {
+        fetch('../api/payments/list.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({student_id})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                let html = '<table><tr><th>ID</th><th>Booking</th><th>Amount</th><th>Mode</th><th>Status</th><th>Date</th></tr>';
+                data.payments.forEach(p => {
+                    html += `<tr>
+                        <td>${p.payment_id}</td>
+                        <td>${p.booking_id}</td>
+                        <td>₹${p.amount}</td>
+                        <td>${p.payment_mode}</td>
+                        <td>${p.status}</td>
+                        <td>${p.payment_date}</td>
+                    </tr>`;
+                });
+                html += '</table>';
+                document.getElementById('paymentList').innerHTML = html;
+            } else {
+                document.getElementById('paymentList').textContent = 'Could not load payments.';
+            }
+        });
+    }
+    loadPayments();
+    </script>
+</body>
+</html>

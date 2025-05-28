@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Manage Bookings</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        body {
+            background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin: 24px 0 0 24px;
+        }
+        a:hover { text-decoration: underline; }
+        h2 {
+            color: #007bff;
+            margin-top: 24px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        #bookingList {
+            margin: 32px auto 0 auto;
+            max-width: 1100px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        th, td {
+            border: none;
+            padding: 14px 12px;
+            text-align: left;
+        }
+        th {
+            background: #007bff;
+            color: #fff;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        tr:nth-child(even) {
+            background: #f3f7fb;
+        }
+        tr:hover {
+            background: #e6f0fa;
+        }
+        button {
+            background: #e53935;
+            color: #fff;
+            border: none;
+            padding: 7px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #b71c1c;
+        }
+        @media (max-width: 800px) {
+            #bookingList { max-width: 98vw; }
+            table, th, td { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <a href="dashboard.html">← Back to Admin Dashboard</a>
+    <h2>Manage Bookings</h2>
+    <div id="bookingList"></div>
+    <script>
+    function loadBookings() {
+        fetch('../../api/bookings/list.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                let html = '<table><tr><th>ID</th><th>Student</th><th>Email</th><th>Room</th><th>Type</th><th>Check-in</th><th>Check-out</th><th>Status</th><th>Action</th></tr>';
+                data.bookings.forEach(b => {
+                    html += `<tr>
+                        <td>${b.booking_id}</td>
+                        <td>${b.first_name} ${b.last_name}</td>
+                        <td>${b.email}</td>
+                        <td>${b.room_number}</td>
+                        <td>${b.room_type}</td>
+                        <td>${b.check_in}</td>
+                        <td>${b.check_out}</td>
+                        <td>${b.status}</td>
+                        <td>
+                            ${b.status !== 'cancelled'
+                                ? `<button onclick="cancelBooking(${b.booking_id})">Cancel</button>`
+                                : '—'}
+                        </td>
+                    </tr>`;
+                });
+                html += '</table>';
+                document.getElementById('bookingList').innerHTML = html;
+            } else {
+                document.getElementById('bookingList').textContent = 'Could not fetch bookings.';
+            }
+        });
+    }
+    loadBookings();
+
+    window.cancelBooking = function(booking_id) {
+        if (!confirm('Are you sure you want to cancel this booking?')) return;
+        fetch('../../api/bookings/cancel.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({booking_id})
+        })
+        .then(response => response.json())
+        .then(result => {
+            alert(result.message);
+            loadBookings();
+        });
+    }
+    </script>
+</body>
+</html>

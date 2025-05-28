@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Manage Payments</title>
+    <link rel="stylesheet" href="admin_payments.css">
+    <style>
+        body {
+            background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin: 24px 0 0 24px;
+        }
+        a:hover { text-decoration: underline; }
+        h2 {
+            color: #007bff;
+            margin-top: 24px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        #paymentList {
+            margin: 32px auto 0 auto;
+            max-width: 1100px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        th, td {
+            border: none;
+            padding: 14px 12px;
+            text-align: left;
+        }
+        th {
+            background: #007bff;
+            color: #fff;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        tr:nth-child(even) {
+            background: #f3f7fb;
+        }
+        tr:hover {
+            background: #e6f0fa;
+        }
+        button {
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 7px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        /* Modal styles */
+        #receiptModal {
+            display: none;
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translate(-50%,0);
+            background: #fff;
+            border: 2px solid #007bff;
+            padding: 32px 28px 24px 28px;
+            min-width: 340px;
+            z-index: 1000;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            border-radius: 12px;
+            animation: modalIn 0.2s;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: translate(-50%,-20px);}
+            to { opacity: 1; transform: translate(-50%,0);}
+        }
+        #receiptOverlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.18);
+            z-index: 999;
+        }
+        #receiptContent h2 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        #receiptContent table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        #receiptContent th, #receiptContent td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        #receiptContent th {
+            background-color: #007bff;
+            color: white;
+            width: 40%;
+        }
+        #receiptContent .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 30px;
+        }
+        @media (max-width: 800px) {
+            #paymentList { max-width: 98vw; }
+            table, th, td { font-size: 14px; }
+            #receiptModal { min-width: 90vw; padding: 14px 6vw; }
+        }
+    </style>
+</head>
+<body>
+    <a href="dashboard.html">← Back to Admin Dashboard</a>
+    <h2>All Payments</h2>
+    <div id="paymentList"></div>
+
+    <!-- Receipt Modal -->
+    <div id="receiptModal">
+        <div id="receiptContent"></div>
+        <div style="margin-top:18px; text-align:right;">
+            <button onclick="printReceipt()">Print / Download</button>
+            <button onclick="closeReceipt()">Close</button>
+        </div>
+    </div>
+    <div id="receiptOverlay"></div>
+
+    <script>
+    function loadPayments() {
+        fetch('../../api/payments/list.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                let html = '<table><tr>' +
+                    '<th>ID</th>' +
+                    '<th>Booking</th>' +
+                    '<th>Student ID</th>' +
+                    '<th>Amount</th>' +
+                    '<th>Mode</th>' +
+                    '<th>Status</th>' +
+                    '<th>Date</th>' +
+                    '<th>Receipt</th>' +
+                    '</tr>';
+                data.payments.forEach(p => {
+                    html += '<tr>' +
+                        '<td>' + p.payment_id + '</td>' +
+                        '<td>' + p.booking_id + ' (Room ' + p.room_number + ')</td>' +
+                        '<td>' + p.student_id + '</td>' +
+                        '<td>₹' + p.amount + '</td>' +
+                        '<td>' + p.payment_mode + '</td>' +
+                        '<td>' + p.status + '</td>' +
+                        '<td>' + p.payment_date + '</td>' +
+                        '<td><button onclick="viewReceipt(\'' + encodeURIComponent(JSON.stringify(p)) + '\')">View Receipt</button></td>' +
+                    '</tr>';
+                });
+                html += '</table>';
+                document.getElementById('paymentList').innerHTML = html;
+            } else {
+                document.getElementById('paymentList').textContent = 'Could not load payments.';
+            }
+        });
+    }
+    loadPayments();
+
+    // Show receipt modal
+    window.viewReceipt = function(paymentJson) {
+        const p = JSON.parse(decodeURIComponent(paymentJson));
+        document.getElementById('receiptContent').innerHTML = `
+            <h2>Payment Invoice</h2>
+            <table>
+                <tr><th>Receipt No.</th><td>${p.payment_id}</td></tr>
+                <tr><th>Booking ID</th><td>${p.booking_id}</td></tr>
+                <tr><th>Student ID</th><td>${p.student_id}</td></tr>
+                <tr><th>Room No.</th><td>${p.room_number}</td></tr>
+                <tr><th>Amount Paid</th><td>₹${p.amount}</td></tr>
+                <tr><th>Payment Mode</th><td>${p.payment_mode}</td></tr>
+                <tr><th>Status</th><td>${p.status}</td></tr>
+                <tr><th>Payment Date</th><td>${p.payment_date}</td></tr>
+            </table>
+            <div class='footer'>
+                Thank you for your payment!<br>
+                This is a system generated invoice.
+            </div>
+        `;
+        document.getElementById('receiptModal').style.display = 'block';
+        document.getElementById('receiptOverlay').style.display = 'block';
+    };
+
+    function closeReceipt() {
+        document.getElementById('receiptModal').style.display = 'none';
+        document.getElementById('receiptOverlay').style.display = 'none';
+    }
+    document.getElementById('receiptOverlay').onclick = closeReceipt;
+
+    function printReceipt() {
+        const printContents = document.getElementById('receiptContent').innerHTML;
+        const w = window.open('', '', 'height=600,width=800');
+        w.document.write('<html><head><title>Payment Receipt</title>');
+        w.document.write('<style>body{font-family:sans-serif;} table{border-collapse:collapse;width:100%;} td{padding:6px 12px;} th,td{border:1px solid #bbb;}</style>');
+        w.document.write('</head><body>');
+        w.document.write('<h2 style="color:#007bff;">Hostel Payment Receipt</h2>');
+        w.document.write(printContents);
+        w.document.write('<br><div style="font-size:12px;color:#888;">This is a system generated receipt.</div>');
+        w.document.write('</body></html>');
+        w.document.close();
+        w.focus();
+        w.print();
+    }
+    </script>
+</body>
+</html>

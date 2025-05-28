@@ -1,0 +1,168 @@
+/* admin_payments.css */
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f8fafc;
+    margin: 0;
+    padding: 0;
+}
+
+h2 {
+    color: #007bff;
+    margin-top: 24px;
+    margin-bottom: 18px;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+    margin: 24px 0 0 24px;
+    display: inline-block;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#paymentList {
+    margin: 32px auto 0 auto;
+    max-width: 1100px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th, td {
+    border: none;
+    padding: 14px 12px;
+    text-align: left;
+}
+
+th {
+    background: #007bff;
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+tr:nth-child(even) {
+    background: #f3f7fb;
+}
+
+tr:hover {
+    background: #e6f0fa;
+}
+
+button {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    padding: 7px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    transition: background 0.2s;
+    margin-right: 5px;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+#receiptModal {
+    display: none;
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%,0);
+    background: #fff;
+    border: 2px solid #007bff;
+    padding: 32px 28px 24px 28px;
+    min-width: 340px;
+    z-index: 1000;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    border-radius: 12px;
+    animation: modalIn 0.2s;
+}
+
+@keyframes modalIn {
+    from { opacity: 0; transform: translate(-50%,-20px);}
+    to { opacity: 1; transform: translate(-50%,0);}
+}
+
+#receiptOverlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.18);
+    z-index: 999;
+}
+
+#receiptContent table {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+#receiptContent td {
+    padding: 6px 10px;
+}
+
+#receiptModal h3 {
+    margin-top: 0;
+    color: #007bff;
+    letter-spacing: 1px;
+}
+
+@media (max-width: 600px) {
+    #paymentList { max-width: 98vw; }
+    table, th, td { font-size: 14px; }
+    #receiptModal { min-width: 90vw; padding: 14px 6vw; }
+}
+/* Professional Invoice Style */
+#receiptContent {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    max-width: 600px;
+    margin: auto;
+}
+
+#receiptContent h2 {
+    text-align: center;
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+#receiptContent table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+#receiptContent th, #receiptContent td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+#receiptContent th {
+    background-color: #007bff;
+    color: white;
+    width: 40%;
+}
+
+#receiptContent .footer {
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+    margin-top: 30px;
+}
